@@ -22,18 +22,19 @@ public:
 	class UStaticMeshComponent* Mesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UBoxComponent* BoxCollider;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USphereComponent* InteractionVolume;
 
-	/** Camera boom positioning the camera behind the player */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+	FVector ForwardRotationPoint;
 
-	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
+	FVector BackwardRotationPoint;
 
-	UPROPERTY(EditAnywhere, Category = "Camera")
-	float DefaultCameraBoomLength;
+	FVector LeftRotationPoint;
+
+	FVector RightRotationPoint;
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,4 +47,22 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void StartRolling(FVector RotationPoint);
+
+	void Roll();
+
+	FORCEINLINE bool IsRolling() { return bIsRolling; }
+
+private:
+	bool bIsRolling;
+
+	
+
+	float RotationAngle;
+
+	FVector RotationOrigin;
+
+	FVector RollingDirection;
+
+	float DistanceFromOrigin;
 };
