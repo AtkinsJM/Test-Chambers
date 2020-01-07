@@ -3,10 +3,15 @@
 
 #include "PlayerCharacterController.h"
 #include "PlayerCharacter.h"
+#include "FollowCamera.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
 
 APlayerCharacterController::APlayerCharacterController()
 {
 	bIsRolling = false;
+
+	FollowCamera = nullptr;
 }
 
 void APlayerCharacterController::SetupInputComponent()
@@ -24,6 +29,11 @@ void APlayerCharacterController::OnPossess(APawn * Pawn)
 	Super::OnPossess(Pawn);
 
 	PlayerCharacter = Cast<APlayerCharacter>(Pawn);
+
+	if (FollowCamera)
+	{
+		FollowCamera->SetTarget(PlayerCharacter);
+	}
 }
 
 void APlayerCharacterController::OnUnPossess()
@@ -36,6 +46,16 @@ void APlayerCharacterController::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (!FollowCamera)
+	{
+		FollowCamera = Cast<AFollowCamera>(UGameplayStatics::GetActorOfClass(GetWorld(), FollowCameraClass));
+		if (FollowCamera && PlayerCharacter)
+		{
+			SetViewTarget(FollowCamera);
+			FollowCamera->SetTarget(PlayerCharacter);
+		}
+	}
+
 	// Finds all playable (animal) characters in the world and places them in an array for swapping character.
 	//FindPlayableCharacters();
 	/*
@@ -74,7 +94,7 @@ void APlayerCharacterController::HandleMovement(float DeltaTime)
 void APlayerCharacterController::MoveForward(float Value)
 {
 	if (!PlayerCharacter) { return; }
-	if (PlayerCharacter->IsRolling() || Value < 0.5f) { return; }
+	if (PlayerCharacter->IsRolling() || Value == 0.0f) { return; }
 	MovementVector = FVector2D(Value, 0);
 	PlayerCharacter->StartRolling(Value > 0 ? PlayerCharacter->ForwardRotationPoint : PlayerCharacter->BackwardRotationPoint);
 }
@@ -82,7 +102,7 @@ void APlayerCharacterController::MoveForward(float Value)
 void APlayerCharacterController::MoveSideways(float Value)
 {
 	if (!PlayerCharacter) { return; }
-	if (PlayerCharacter->IsRolling() || Value < 0.5f) { return; }
+	if (PlayerCharacter->IsRolling() || Value == 0.0f) { return; }
 	MovementVector = FVector2D(0, Value);
 	PlayerCharacter->StartRolling(Value > 0 ? PlayerCharacter->RightRotationPoint : PlayerCharacter->LeftRotationPoint);
 }

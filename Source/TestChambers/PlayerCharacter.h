@@ -49,7 +49,7 @@ public:
 
 	void StartRolling(FVector RotationPoint);
 
-	void Roll();
+	void Roll(float DeltaTime);
 
 	FORCEINLINE bool IsRolling() { return bIsRolling; }
 
@@ -65,4 +65,6 @@ private:
 	FVector RollingDirection;
 
 	float DistanceFromOrigin;
+
+	float Width;
 };

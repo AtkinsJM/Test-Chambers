@@ -17,6 +17,8 @@ class TESTCHAMBERS_API APlayerCharacterController : public APlayerController
 public:
 	APlayerCharacterController();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera")
+	TSubclassOf<class ACameraActor> FollowCameraClass;
 
 	class APlayerCharacter* PlayerCharacter;
 
@@ -47,4 +49,6 @@ private:
 	bool bIsRolling;
 
 	FVector2D MovementVector;
+
+	class AFollowCamera* FollowCamera;
 };

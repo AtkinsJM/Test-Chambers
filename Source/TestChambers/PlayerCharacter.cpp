@@ -39,12 +39,17 @@ void APlayerCharacter::BeginPlay()
 
 	SetActorRotation(FRotator(0));
 
-	ForwardRotationPoint = FVector(Mesh->GetRelativeScale3D().X * 100 / 2.0f, 0, 0);
-	BackwardRotationPoint = FVector(-Mesh->GetRelativeScale3D().X * 100 / 2.0f, 0, 0);
-	LeftRotationPoint = FVector(0, -Mesh->GetRelativeScale3D().Y * 100 / 2.0f, 0);
-	RightRotationPoint = FVector(0, Mesh->GetRelativeScale3D().Y * 100 / 2.0f, 0);
+	Width = Mesh->GetRelativeScale3D().X * 100 / 2.0f;
+	UE_LOG(LogTemp, Warning, TEXT("Width: %f"), Width);
 
-	DistanceFromOrigin = FMath::Sqrt(FMath::Square(Mesh->GetRelativeScale3D().X / 2.0f) * FMath::Square(Mesh->GetRelativeScale3D().Y / 2.0f));
+	ForwardRotationPoint = FVector(Width, 0, -Width);
+	BackwardRotationPoint = FVector(-Width, 0, -Width);
+	LeftRotationPoint = FVector(0, -Width, -Width);
+	RightRotationPoint = FVector(0, Width, -Width);
+
+	DistanceFromOrigin = FMath::Sqrt(Width * Width * 2);
+
+	UE_LOG(LogTemp, Warning, TEXT("Distance from origin: %f"), DistanceFromOrigin);
 
 	UE_LOG(LogTemp, Warning, TEXT("Player pos: %s"), *GetActorLocation().ToString());
 	UE_LOG(LogTemp, Warning, TEXT("Forward rot pos: %s"), *ForwardRotationPoint.ToString());
@@ -61,7 +66,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	{
 		if (RotationAngle < 90.0f)
 		{
-			Roll();
+			Roll(DeltaTime);
 		}
 		return;
 	}
@@ -78,32 +83,37 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void APlayerCharacter::StartRolling(FVector RotationPoint)
 {
 	bIsRolling = true;
+	// Initialise rotation angle
 	RotationAngle = 0.0f;
+	// Get rotation origin (point/axis about which rotation occurs)
 	RotationOrigin = GetActorLocation() + RotationPoint;
+	// Get movement direction (x-y plane)
 	RollingDirection = FVector(RotationPoint.X != 0 ? FMath::Abs(RotationPoint.X) / RotationPoint.X : 0, RotationPoint.Y != 0 ? FMath::Abs(RotationPoint.Y) / RotationPoint.Y : 0, 0);
 }
 
 
-void APlayerCharacter::Roll()
+void APlayerCharacter::Roll(float DeltaTime)
 {
-	// Get change in angle
-	float a = GetWorld()->DeltaTimeSeconds * 100;//speed; //rotationSpeed * (Time::GetSpeed() / 30.0f);
+	// Get change in angle for this frame
+	float a = DeltaTime * 100; //speed
 	RotationAngle += a;
 	RotationAngle = RotationAngle > 90.0f ? 90.0f : RotationAngle;
-	// Calculate angle between centre of entity and rotationOrigin
 	float OffsetAngle = 45.0f + RotationAngle;
-	// Calculate spacial offset between centre of entity and rotationOrigin
-	//FVector Offset = FVector(DistanceFromOrigin * FMath::Cos(OffsetAngle) * -RollingDirection.X, DistanceFromOrigin * FMath::Sin(OffsetAngle), DistanceFromOrigin * FMath::Cos(OffsetAngle) * -RollingDirection.Z);
-	//SetActorLocation(RotationOrigin + Offset);
+
+	FVector SpatialOffset = FVector(DistanceFromOrigin * FMath::Cos(FMath::DegreesToRadians(OffsetAngle)) * -RollingDirection.X,
+									DistanceFromOrigin * FMath::Cos(FMath::DegreesToRadians(OffsetAngle)) * -RollingDirection.Y,
+									DistanceFromOrigin * FMath::Sin(FMath::DegreesToRadians(OffsetAngle)));
+	SetActorLocation(RotationOrigin + SpatialOffset);
+
+
 	FRotator RotationToApply = FRotator(RollingDirection.X * -a, 0, RollingDirection.Y * a);
 	SetActorRotation(GetActorRotation() + RotationToApply);
-	
+
 	if (RotationAngle >= 90.0f)
 	{
 		// Finish rolling by zeroing out rotation
 		SetActorRotation(FRotator(0));
 		bIsRolling = false;
 	}
-	
 }
 
