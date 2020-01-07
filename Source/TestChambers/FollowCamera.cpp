@@ -10,25 +10,39 @@ AFollowCamera::AFollowCamera()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Create Follow Camera
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Follow Camera"));
-	// Attach camera to end of boom and let boom control its rotation
-	Camera->SetupAttachment(GetRootComponent());
-	//Camera->bUsePawnControlRotation = false;
-	Camera->SetFieldOfView(10.0f);
+	CameraRotation = FRotator(-38.0f, -45.0f, 0);
+
+	DistanceFromTarget = 1000.0f;
+
+	TargetToFollow = nullptr;
 }
 
 // Called when the game starts or when spawned
 void AFollowCamera::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetActorRotation(CameraRotation);
 }
 
 // Called every frame
 void AFollowCamera::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	FollowTarget();
+}
 
+void AFollowCamera::FollowTarget()
+{
+	if (!TargetToFollow) { return; }
+	
+	FVector TargetPosition = TargetToFollow->GetActorLocation();
+	float LateralDistance = DistanceFromTarget * FMath::Cos(FMath::DegreesToRadians(GetActorRotation().Pitch));
+	float XOffset = LateralDistance * FMath::Cos(FMath::DegreesToRadians(FMath::Abs(GetActorRotation().Yaw)));
+	float YOffset = LateralDistance * FMath::Sin(FMath::DegreesToRadians(FMath::Abs(GetActorRotation().Yaw)));
+	// TODO: adjust z offset to avoid bumpiness when character is rolling
+	float ZOffset = DistanceFromTarget * FMath::Sin(FMath::DegreesToRadians(FMath::Abs(GetActorRotation().Pitch)));
+	FVector WantedPosition = FVector(TargetPosition.X - XOffset, TargetPosition.Y + YOffset, TargetPosition.Z + ZOffset);
+
+	SetActorLocation(WantedPosition)
 }
 
