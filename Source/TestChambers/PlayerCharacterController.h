@@ -38,17 +38,11 @@ protected:
 
 public:
 
-	void HandleMovement(float DeltaTime);
 	void MoveForward(float Value);
 	void MoveSideways(float Value);
-
-	
-
-
+		
 private:
 	bool bIsRolling;
-
-	FVector2D MovementVector;
-
+	
 	class AFollowCamera* FollowCamera;
 };

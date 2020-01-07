@@ -27,6 +27,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USphereComponent* InteractionVolume;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
+	float RollingSpeed;
+
 	FVector ForwardRotationPoint;
 
 	FVector BackwardRotationPoint;
@@ -53,6 +56,7 @@ public:
 
 	FORCEINLINE bool IsRolling() { return bIsRolling; }
 
+
 private:
 	bool bIsRolling;
 
@@ -67,4 +71,5 @@ private:
 	float DistanceFromOrigin;
 
 	float Width;
+
 };

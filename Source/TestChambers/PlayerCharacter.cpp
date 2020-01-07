@@ -8,6 +8,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Math/Vector.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -26,6 +27,8 @@ APlayerCharacter::APlayerCharacter()
 
 	InteractionVolume = CreateDefaultSubobject<USphereComponent>(TEXT("Interaction Volume"));
 	InteractionVolume->SetupAttachment(Root);
+
+	RollingSpeed = 360.0f;
 
 	//InteractionVolume->OnComponentBeginOverlap.AddDynamic(this, &AAnimalCharacter::OnBeginOverlap);
 	//InteractionVolume->OnComponentEndOverlap.AddDynamic(this, &AAnimalCharacter::OnEndOverlap);
@@ -95,9 +98,10 @@ void APlayerCharacter::StartRolling(FVector RotationPoint)
 void APlayerCharacter::Roll(float DeltaTime)
 {
 	// Get change in angle for this frame
-	float a = DeltaTime * 100; //speed
+	float a = DeltaTime * RollingSpeed; 
+	a = RotationAngle + a > 90.0f ? 90.0f - RotationAngle : a;
 	RotationAngle += a;
-	RotationAngle = RotationAngle > 90.0f ? 90.0f : RotationAngle;
+	
 	float OffsetAngle = 45.0f + RotationAngle;
 
 	FVector SpatialOffset = FVector(DistanceFromOrigin * FMath::Cos(FMath::DegreesToRadians(OffsetAngle)) * -RollingDirection.X,
@@ -105,15 +109,11 @@ void APlayerCharacter::Roll(float DeltaTime)
 									DistanceFromOrigin * FMath::Sin(FMath::DegreesToRadians(OffsetAngle)));
 	SetActorLocation(RotationOrigin + SpatialOffset);
 
-
-	FRotator RotationToApply = FRotator(RollingDirection.X * -a, 0, RollingDirection.Y * a);
-	SetActorRotation(GetActorRotation() + RotationToApply);
-
+	FQuat DeltaRotation = FQuat(FRotator(RollingDirection.X * -a, 0, RollingDirection.Y * a));
+	AddActorWorldRotation(DeltaRotation);
+	
 	if (RotationAngle >= 90.0f)
 	{
-		// Finish rolling by zeroing out rotation
-		SetActorRotation(FRotator(0));
 		bIsRolling = false;
 	}
 }
-

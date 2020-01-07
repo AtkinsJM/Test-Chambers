@@ -43,6 +43,6 @@ void AFollowCamera::FollowTarget()
 	float ZOffset = DistanceFromTarget * FMath::Sin(FMath::DegreesToRadians(FMath::Abs(GetActorRotation().Pitch)));
 	FVector WantedPosition = FVector(TargetPosition.X - XOffset, TargetPosition.Y + YOffset, TargetPosition.Z + ZOffset);
 
-	SetActorLocation(WantedPosition)
+	SetActorLocation(WantedPosition);
 }
 

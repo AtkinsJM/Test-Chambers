@@ -17,8 +17,7 @@ APlayerCharacterController::APlayerCharacterController()
 void APlayerCharacterController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-
-
+	
 	InputComponent->BindAxis("ForwardMovement", this, &APlayerCharacterController::MoveForward);
 	InputComponent->BindAxis(TEXT("SidewaysMovement"), this, &APlayerCharacterController::MoveSideways);
 
@@ -82,20 +81,10 @@ void APlayerCharacterController::Tick(float DeltaTime)
 
 }
 
-void APlayerCharacterController::HandleMovement(float DeltaTime)
-{
-	//Handle movement and rotation
-	if (!PlayerCharacter) { return; }
-
-	
-
-}
-
 void APlayerCharacterController::MoveForward(float Value)
 {
 	if (!PlayerCharacter) { return; }
 	if (PlayerCharacter->IsRolling() || Value == 0.0f) { return; }
-	MovementVector = FVector2D(Value, 0);
 	PlayerCharacter->StartRolling(Value > 0 ? PlayerCharacter->ForwardRotationPoint : PlayerCharacter->BackwardRotationPoint);
 }
 
@@ -103,6 +92,5 @@ void APlayerCharacterController::MoveSideways(float Value)
 {
 	if (!PlayerCharacter) { return; }
 	if (PlayerCharacter->IsRolling() || Value == 0.0f) { return; }
-	MovementVector = FVector2D(0, Value);
 	PlayerCharacter->StartRolling(Value > 0 ? PlayerCharacter->RightRotationPoint : PlayerCharacter->LeftRotationPoint);
 }
