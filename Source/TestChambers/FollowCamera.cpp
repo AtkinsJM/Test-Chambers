@@ -4,6 +4,8 @@
 #include "FollowCamera.h"
 #include "Camera/CameraComponent.h"
 
+#define OUT
+
 // Sets default values
 AFollowCamera::AFollowCamera()
 {
@@ -15,34 +17,57 @@ AFollowCamera::AFollowCamera()
 	DistanceFromTarget = 1000.0f;
 
 	TargetToFollow = nullptr;
+
+	FollowSpeed = 5.0f;
 }
 
 // Called when the game starts or when spawned
 void AFollowCamera::BeginPlay()
 {
 	Super::BeginPlay();
-	SetActorRotation(CameraRotation);
 }
 
 // Called every frame
 void AFollowCamera::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FollowTarget();
+	FollowTarget(DeltaTime);
 }
 
-void AFollowCamera::FollowTarget()
+void AFollowCamera::FollowTarget(float DeltaTime)
 {
 	if (!TargetToFollow) { return; }
 	
-	FVector TargetPosition = TargetToFollow->GetActorLocation();
+	FVector TargetPosition;
+
+	FVector Extent;
+	TargetToFollow->GetActorBounds(false, OUT TargetPosition, OUT Extent);
+
+	TargetPosition.Z = TargetPosition.Z + ((TargetExtents.Z - Extent.Z) /2.0f);
+
+	FVector WantedPosition = TargetPosition + Offset;
+
+	SetActorLocation(FMath::VInterpTo(GetActorLocation(), WantedPosition, DeltaTime, FollowSpeed));
+}
+
+void AFollowCamera::SetTarget(AActor * Target)
+{
+	TargetToFollow = Target;
+
+	SetActorRotation(CameraRotation);
+
 	float LateralDistance = DistanceFromTarget * FMath::Cos(FMath::DegreesToRadians(GetActorRotation().Pitch));
 	float XOffset = LateralDistance * FMath::Cos(FMath::DegreesToRadians(FMath::Abs(GetActorRotation().Yaw)));
 	float YOffset = LateralDistance * FMath::Sin(FMath::DegreesToRadians(FMath::Abs(GetActorRotation().Yaw)));
-	// TODO: adjust z offset to avoid bumpiness when character is rolling
 	float ZOffset = DistanceFromTarget * FMath::Sin(FMath::DegreesToRadians(FMath::Abs(GetActorRotation().Pitch)));
-	FVector WantedPosition = FVector(TargetPosition.X - XOffset, TargetPosition.Y + YOffset, TargetPosition.Z + ZOffset);
 
-	SetActorLocation(WantedPosition);
+	Offset = FVector(-XOffset, YOffset, ZOffset);
+
+	FVector TargetPosition;
+
+	TargetToFollow->GetActorBounds(false, OUT TargetPosition, OUT TargetExtents);
+
+	FVector WantedPosition = TargetPosition + Offset;
+	SetActorLocation(WantedPosition);	
 }
 

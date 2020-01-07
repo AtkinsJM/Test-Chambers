@@ -43,21 +43,13 @@ void APlayerCharacter::BeginPlay()
 	SetActorRotation(FRotator(0));
 
 	Width = Mesh->GetRelativeScale3D().X * 100 / 2.0f;
-	UE_LOG(LogTemp, Warning, TEXT("Width: %f"), Width);
 
 	ForwardRotationPoint = FVector(Width, 0, -Width);
 	BackwardRotationPoint = FVector(-Width, 0, -Width);
 	LeftRotationPoint = FVector(0, -Width, -Width);
 	RightRotationPoint = FVector(0, Width, -Width);
 
-	DistanceFromOrigin = FMath::Sqrt(Width * Width * 2);
-
-	UE_LOG(LogTemp, Warning, TEXT("Distance from origin: %f"), DistanceFromOrigin);
-
-	UE_LOG(LogTemp, Warning, TEXT("Player pos: %s"), *GetActorLocation().ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Forward rot pos: %s"), *ForwardRotationPoint.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Right rot pos: %s"), *RightRotationPoint.ToString());
-	
+	DistanceFromOrigin = FMath::Sqrt(Width * Width * 2);	
 }
 
 // Called every frame
@@ -108,7 +100,7 @@ void APlayerCharacter::Roll(float DeltaTime)
 	FVector SpatialOffset = FVector(DistanceFromOrigin * FMath::Cos(FMath::DegreesToRadians(OffsetAngle)) * -RollingDirection.X,
 									DistanceFromOrigin * FMath::Cos(FMath::DegreesToRadians(OffsetAngle)) * -RollingDirection.Y,
 									DistanceFromOrigin * FMath::Sin(FMath::DegreesToRadians(OffsetAngle)));
-
+	
 	FVector Offset = RotationOrigin + SpatialOffset - GetActorLocation();
 
 	AddActorWorldOffset(Offset);

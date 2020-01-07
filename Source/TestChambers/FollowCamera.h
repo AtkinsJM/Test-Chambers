@@ -23,6 +23,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float DistanceFromTarget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
+	float FollowSpeed;
+
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Properties")
 	AActor* TargetToFollow;
 
@@ -34,8 +37,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void FollowTarget();
+	void FollowTarget(float DeltaTime);
 
-	FORCEINLINE void SetTarget(AActor* Target) { TargetToFollow = Target; }
+	void SetTarget(AActor* Target);
 
+private:
+	FVector Offset;
+
+	FVector TargetExtents;
 };
