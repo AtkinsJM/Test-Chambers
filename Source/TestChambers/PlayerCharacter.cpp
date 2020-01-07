@@ -104,11 +104,15 @@ void APlayerCharacter::Roll(float DeltaTime)
 	
 	float OffsetAngle = 45.0f + RotationAngle;
 
+	// TODO: remove need to create SpatialOffset first...
 	FVector SpatialOffset = FVector(DistanceFromOrigin * FMath::Cos(FMath::DegreesToRadians(OffsetAngle)) * -RollingDirection.X,
 									DistanceFromOrigin * FMath::Cos(FMath::DegreesToRadians(OffsetAngle)) * -RollingDirection.Y,
 									DistanceFromOrigin * FMath::Sin(FMath::DegreesToRadians(OffsetAngle)));
-	SetActorLocation(RotationOrigin + SpatialOffset);
 
+	FVector Offset = RotationOrigin + SpatialOffset - GetActorLocation();
+
+	AddActorWorldOffset(Offset);
+	
 	FQuat DeltaRotation = FQuat(FRotator(RollingDirection.X * -a, 0, RollingDirection.Y * a));
 	AddActorWorldRotation(DeltaRotation);
 	
