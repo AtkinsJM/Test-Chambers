@@ -221,8 +221,6 @@ AInteractable * APlayerCharacter::IsInteractablePresent()
 
 void APlayerCharacter::Interact()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Interact called"));
 	if (!Interactable) { return; }
-	UE_LOG(LogTemp, Warning, TEXT("Interacting..."));
 	Interactable->Interact(this);
 }

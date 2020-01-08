@@ -14,8 +14,8 @@ ADoor::ADoor()
 void ADoor::Interact(AActor * OtherActor)
 {
 	Super::Interact(OtherActor);
+
 	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
-	UE_LOG(LogTemp, Warning, TEXT("Door interaction occurring"));
 	if (PlayerCharacter)
 	{
 		if (PlayerCharacter->HasKey(RequiredKeyType))
@@ -34,11 +34,9 @@ void ADoor::Interact(AActor * OtherActor)
 
 void ADoor::Unlock()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Door unlocked"));
 	if (DoorUnlockedCue)
 	{
-		UGameplayStatics::PlaySound2D(GetWorld(), DoorUnlockedCue);
-		
+		UGameplayStatics::PlaySound2D(GetWorld(), DoorUnlockedCue);	
 	}
 	Destroy();
 }

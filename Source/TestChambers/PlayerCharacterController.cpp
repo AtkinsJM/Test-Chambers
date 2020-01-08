@@ -95,7 +95,6 @@ void APlayerCharacterController::AssignCamera()
 void APlayerCharacterController::Interact()
 {
 	if (!PlayerCharacter) { return; }
-	UE_LOG(LogTemp, Warning, TEXT("Controlled interact called"));
 	PlayerCharacter->Interact();
 }
 
