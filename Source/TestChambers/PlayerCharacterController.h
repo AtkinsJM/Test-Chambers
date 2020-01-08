@@ -40,7 +40,9 @@ public:
 
 	void MoveForward(float Value);
 	void MoveSideways(float Value);
-		
+	
+	void AssignCamera();
+
 private:
 	bool bIsRolling;
 	

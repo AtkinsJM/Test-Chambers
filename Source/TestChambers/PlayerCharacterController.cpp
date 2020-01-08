@@ -29,7 +29,11 @@ void APlayerCharacterController::OnPossess(APawn * Pawn)
 
 	PlayerCharacter = Cast<APlayerCharacter>(Pawn);
 
-	if (FollowCamera)
+	if (!FollowCamera)
+	{
+		AssignCamera();
+	}
+	else
 	{
 		FollowCamera->SetTarget(PlayerCharacter);
 	}
@@ -47,14 +51,9 @@ void APlayerCharacterController::BeginPlay()
 	
 	if (!FollowCamera)
 	{
-		FollowCamera = Cast<AFollowCamera>(UGameplayStatics::GetActorOfClass(GetWorld(), FollowCameraClass));
-		if (FollowCamera && PlayerCharacter)
-		{
-			SetViewTarget(FollowCamera);
-			FollowCamera->SetTarget(PlayerCharacter);
-		}
+		AssignCamera();
 	}
-
+	
 	// Finds all playable (animal) characters in the world and places them in an array for swapping character.
 	//FindPlayableCharacters();
 	/*
@@ -79,6 +78,16 @@ void APlayerCharacterController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void APlayerCharacterController::AssignCamera()
+{
+	FollowCamera = Cast<AFollowCamera>(UGameplayStatics::GetActorOfClass(GetWorld(), FollowCameraClass));
+	if (FollowCamera && PlayerCharacter)
+	{
+		SetViewTarget(FollowCamera);
+		FollowCamera->SetTarget(PlayerCharacter);
+	}
 }
 
 void APlayerCharacterController::MoveForward(float Value)

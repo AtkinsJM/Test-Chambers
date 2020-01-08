@@ -11,6 +11,8 @@
 #include "Math/Vector.h"
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
+#include "Pickup.h"
+#include "DoorKey.h"
 
 #define OUT
 
@@ -28,16 +30,19 @@ APlayerCharacter::APlayerCharacter()
 
 	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
 	BoxCollider->SetupAttachment(Mesh);
+	BoxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BoxCollider->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
-	InteractionVolume = CreateDefaultSubobject<USphereComponent>(TEXT("Interaction Volume"));
-	InteractionVolume->SetupAttachment(Root);
+	//InteractionVolume = CreateDefaultSubobject<USphereComponent>(TEXT("Interaction Volume"));
+	//InteractionVolume->SetupAttachment(Root);
 
 	RollingSpeed = 360.0f;
 
 	RollCue = nullptr;
 
-	//InteractionVolume->OnComponentBeginOverlap.AddDynamic(this, &AAnimalCharacter::OnBeginOverlap);
-	//InteractionVolume->OnComponentEndOverlap.AddDynamic(this, &AAnimalCharacter::OnEndOverlap);
+
+	BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnBeginOverlap);
+	BoxCollider->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::OnEndOverlap);
 
 }
 
@@ -140,4 +145,47 @@ bool APlayerCharacter::IsBlocked(FVector Direction)
 	}
 	return false;
 	*/
+}
+
+void APlayerCharacter::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	APickup* Pickup = Cast<APickup>(OtherActor);
+	if (Pickup)
+	{
+		PickUp(Pickup);
+	}
+}
+
+void APlayerCharacter::OnEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+{
+}
+
+void APlayerCharacter::PickUp(APickup* Pickup)
+{
+	ADoorKey* Key = Cast<ADoorKey>(Pickup);
+	if (Key)
+	{
+		PickUpKey(Key);
+	}
+	Pickup->PickedUpBy(this);
+}
+
+void APlayerCharacter::PickUpKey(ADoorKey * Key)
+{
+	KeyFlags |= (int32)Key->GetKeyType();
+	FString FlagsBinary = ConvertDecimalToBinary(KeyFlags);
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *FlagsBinary);
+}
+
+FString APlayerCharacter::ConvertDecimalToBinary(int32 decimal)
+{
+	FString sequence = "";
+	int32 remainder = 0;
+	while (decimal > 0)
+	{
+		remainder = decimal % 2;
+		sequence += FString::FromInt(remainder);
+		decimal /= 2;
+	}
+	return sequence;
 }
