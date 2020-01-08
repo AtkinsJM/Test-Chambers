@@ -9,6 +9,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Math/Vector.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -29,6 +31,8 @@ APlayerCharacter::APlayerCharacter()
 	InteractionVolume->SetupAttachment(Root);
 
 	RollingSpeed = 360.0f;
+
+	RollCue = nullptr;
 
 	//InteractionVolume->OnComponentBeginOverlap.AddDynamic(this, &AAnimalCharacter::OnBeginOverlap);
 	//InteractionVolume->OnComponentEndOverlap.AddDynamic(this, &AAnimalCharacter::OnEndOverlap);
@@ -103,6 +107,10 @@ void APlayerCharacter::Roll(float DeltaTime)
 	// End roll once 90 degrees reached.
 	if (RotationAngle >= 90.0f)
 	{
+		if (RollCue)
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), RollCue);
+		}
 		bIsRolling = false;
 	}
 }

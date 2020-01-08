@@ -38,6 +38,9 @@ public:
 
 	FVector RightRotationPoint;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
+	class USoundCue* RollCue;
+
 
 protected:
 	// Called when the game starts or when spawned
