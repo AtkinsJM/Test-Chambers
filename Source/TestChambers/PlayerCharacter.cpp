@@ -12,6 +12,8 @@
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 
+#define OUT
+
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
@@ -76,13 +78,15 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::StartRolling(FVector RotationPoint)
 {
+	// Get movement direction (x-y plane)
+	RollingDirection = FVector(RotationPoint.X != 0 ? FMath::Abs(RotationPoint.X) / RotationPoint.X : 0, RotationPoint.Y != 0 ? FMath::Abs(RotationPoint.Y) / RotationPoint.Y : 0, 0);
+	if (IsBlocked(RollingDirection)) { return; }
 	bIsRolling = true;
 	// Initialise rotation angle
 	RotationAngle = 0.0f;
 	// Get rotation origin (point/axis about which rotation occurs)
 	RotationOrigin = GetActorLocation() + RotationPoint;
-	// Get movement direction (x-y plane)
-	RollingDirection = FVector(RotationPoint.X != 0 ? FMath::Abs(RotationPoint.X) / RotationPoint.X : 0, RotationPoint.Y != 0 ? FMath::Abs(RotationPoint.Y) / RotationPoint.Y : 0, 0);
+	
 }
 
 
@@ -113,4 +117,27 @@ void APlayerCharacter::Roll(float DeltaTime)
 		}
 		bIsRolling = false;
 	}
+}
+
+bool APlayerCharacter::IsBlocked(FVector Direction)
+{
+	FHitResult HitResult;
+	if (GetWorld()->LineTraceSingleByChannel(OUT HitResult, GetActorLocation(), GetActorLocation() + (Direction * Width * 2), ECollisionChannel::ECC_WorldStatic))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *HitResult.Actor->GetName());
+		return true;
+	}
+	return false;
+
+	/*
+	RaycastHit hit;
+	if (Physics.Raycast(transform.position, dir, out hit, bounds.extents.x * 2))
+	{
+		if (!hit.collider.isTrigger)
+		{
+			return true;
+		}
+	}
+	return false;
+	*/
 }

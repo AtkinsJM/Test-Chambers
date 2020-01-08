@@ -59,6 +59,7 @@ public:
 
 	FORCEINLINE bool IsRolling() { return bIsRolling; }
 
+	bool IsBlocked(FVector Direction);
 
 private:
 	bool bIsRolling;
