@@ -18,8 +18,10 @@ void APlayerCharacterController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	
-	InputComponent->BindAxis("ForwardMovement", this, &APlayerCharacterController::MoveForward);
+	InputComponent->BindAxis(TEXT("ForwardMovement"), this, &APlayerCharacterController::MoveForward);
 	InputComponent->BindAxis(TEXT("SidewaysMovement"), this, &APlayerCharacterController::MoveSideways);
+
+	InputComponent->BindAction(TEXT("Interact"), IE_Pressed, this, &APlayerCharacterController::Interact);
 
 }
 
@@ -88,6 +90,13 @@ void APlayerCharacterController::AssignCamera()
 		SetViewTarget(FollowCamera);
 		FollowCamera->SetTarget(PlayerCharacter);
 	}
+}
+
+void APlayerCharacterController::Interact()
+{
+	if (!PlayerCharacter) { return; }
+	UE_LOG(LogTemp, Warning, TEXT("Controlled interact called"));
+	PlayerCharacter->Interact();
 }
 
 void APlayerCharacterController::MoveForward(float Value)

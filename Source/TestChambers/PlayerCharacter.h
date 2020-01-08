@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "KeyType.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -57,6 +58,8 @@ public:
 
 	void Roll(float DeltaTime);
 
+	void FinishRolling();
+
 	FORCEINLINE bool IsRolling() { return bIsRolling; }
 
 	bool IsBlocked(FVector Direction);
@@ -70,7 +73,16 @@ public:
 
 	void PickUpKey(class ADoorKey* Key);
 
-	FString ConvertDecimalToBinary(int32 decimal);
+	FString ConvertDecimalToBinary(int32 Decimal);
+
+	class AInteractable* IsInteractablePresent();
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE AInteractable* GetInteractable() { return Interactable; }
+
+	bool HasKey(EKeyType KeyType) {	return KeyFlags & static_cast<int>(KeyType); }
+
+	void Interact();
 
 private:
 	bool bIsRolling;
@@ -86,4 +98,6 @@ private:
 	float Width;
 
 	int32 KeyFlags;
+
+	AInteractable* Interactable;
 };

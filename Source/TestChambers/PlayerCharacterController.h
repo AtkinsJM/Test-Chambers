@@ -43,6 +43,8 @@ public:
 	
 	void AssignCamera();
 
+	void Interact();
+
 private:
 	bool bIsRolling;
 	

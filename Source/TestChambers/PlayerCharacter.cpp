@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Pickup.h"
 #include "DoorKey.h"
+#include "Interactable.h"
 
 #define OUT
 
@@ -39,10 +40,11 @@ APlayerCharacter::APlayerCharacter()
 	RollingSpeed = 360.0f;
 
 	RollCue = nullptr;
-
-
+	
 	BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnBeginOverlap);
 	BoxCollider->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::OnEndOverlap);
+
+	Interactable = nullptr;
 
 }
 
@@ -52,6 +54,8 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	SetActorRotation(FRotator(0));
+
+	KeyFlags = 0;
 
 	Width = Mesh->GetRelativeScale3D().X * 100 / 2.0f;
 
@@ -71,6 +75,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 		Roll(DeltaTime);
 		return;
 	}
+	else
+	{
+
+	}
 }
 
 // Called to bind functionality to input
@@ -83,6 +91,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::StartRolling(FVector RotationPoint)
 {
+	Interactable = nullptr;
 	// Get movement direction (x-y plane)
 	RollingDirection = FVector(RotationPoint.X != 0 ? FMath::Abs(RotationPoint.X) / RotationPoint.X : 0, RotationPoint.Y != 0 ? FMath::Abs(RotationPoint.Y) / RotationPoint.Y : 0, 0);
 	if (IsBlocked(RollingDirection)) { return; }
@@ -116,12 +125,18 @@ void APlayerCharacter::Roll(float DeltaTime)
 	// End roll once 90 degrees reached.
 	if (RotationAngle >= 90.0f)
 	{
-		if (RollCue)
-		{
-			UGameplayStatics::PlaySound2D(GetWorld(), RollCue);
-		}
-		bIsRolling = false;
+		FinishRolling();
 	}
+}
+
+void APlayerCharacter::FinishRolling()
+{
+	if (RollCue)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), RollCue);
+	}
+	bIsRolling = false;
+	Interactable = IsInteractablePresent();
 }
 
 bool APlayerCharacter::IsBlocked(FVector Direction)
@@ -173,19 +188,41 @@ void APlayerCharacter::PickUp(APickup* Pickup)
 void APlayerCharacter::PickUpKey(ADoorKey * Key)
 {
 	KeyFlags |= (int32)Key->GetKeyType();
-	FString FlagsBinary = ConvertDecimalToBinary(KeyFlags);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *FlagsBinary);
+	//FString FlagsBinary = ConvertDecimalToBinary(KeyFlags);
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *FlagsBinary);
 }
 
-FString APlayerCharacter::ConvertDecimalToBinary(int32 decimal)
+FString APlayerCharacter::ConvertDecimalToBinary(int32 Decimal)
 {
-	FString sequence = "";
-	int32 remainder = 0;
-	while (decimal > 0)
+	FString Sequence = "";
+	int32 Remainder = 0;
+	while (Decimal > 0)
 	{
-		remainder = decimal % 2;
-		sequence += FString::FromInt(remainder);
-		decimal /= 2;
+		Remainder = Decimal % 2;
+		Sequence += FString::FromInt(Remainder);
+		Decimal /= 2;
 	}
-	return sequence;
+	Sequence.ReverseString();
+	return Sequence;
+}
+
+AInteractable * APlayerCharacter::IsInteractablePresent()
+{
+	FHitResult HitResult;
+	if (GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(2 * Width, 0, 0), "Interactable") ||
+		GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(-2 * Width, 0, 0), "Interactable") ||
+		GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(0, 2 * Width, 0), "Interactable") ||
+		GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(0, -2 * Width, 0), "Interactable"))
+	{
+		return Cast<AInteractable>(HitResult.Actor);
+	}
+	return nullptr;
+}
+
+void APlayerCharacter::Interact()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Interact called"));
+	if (!Interactable) { return; }
+	UE_LOG(LogTemp, Warning, TEXT("Interacting..."));
+	Interactable->Interact(this);
 }
