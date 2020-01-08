@@ -48,8 +48,6 @@ void APlayerCharacter::BeginPlay()
 	BackwardRotationPoint = FVector(-Width, 0, -Width);
 	LeftRotationPoint = FVector(0, -Width, -Width);
 	RightRotationPoint = FVector(0, Width, -Width);
-
-	DistanceFromOrigin = FMath::Sqrt(Width * Width * 2);	
 }
 
 // Called every frame
@@ -59,10 +57,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 	if (bIsRolling)
 	{
-		if (RotationAngle < 90.0f)
-		{
-			Roll(DeltaTime);
-		}
+		Roll(DeltaTime);
 		return;
 	}
 }
@@ -93,28 +88,19 @@ void APlayerCharacter::Roll(float DeltaTime)
 	float a = DeltaTime * RollingSpeed; 
 	a = RotationAngle + a > 90.0f ? 90.0f - RotationAngle : a;
 	RotationAngle += a;
-	
-	/*
-	float OffsetAngle = 45.0f + RotationAngle;
-	// TODO: remove need to create SpatialOffset first...
-	FVector SpatialOffset = FVector(DistanceFromOrigin * FMath::Cos(FMath::DegreesToRadians(OffsetAngle)) * -RollingDirection.X,
-									DistanceFromOrigin * FMath::Cos(FMath::DegreesToRadians(OffsetAngle)) * -RollingDirection.Y,
-									DistanceFromOrigin * FMath::Sin(FMath::DegreesToRadians(OffsetAngle)));
-	
-	FVector Offset = RotationOrigin + SpatialOffset - GetActorLocation();
 
-	AddActorWorldOffset(Offset);
-	*/
-
+	// Rotate position vector around axis and apply offset
 	FVector CurrentPositionVector = GetActorLocation() - RotationOrigin;
 	FVector Axis = FVector::CrossProduct(FVector(0, 0, 1), RollingDirection).GetSafeNormal();
 	FVector NewPositionVector = CurrentPositionVector.RotateAngleAxis(a, Axis);
 	FVector Offset = NewPositionVector - CurrentPositionVector;
 	AddActorWorldOffset(Offset);
 
+	// Calculate delta rotation and apply
 	FQuat DeltaRotation = FQuat(FRotator(RollingDirection.X * -a, 0, RollingDirection.Y * a));
 	AddActorWorldRotation(DeltaRotation);
 	
+	// End roll once 90 degrees reached.
 	if (RotationAngle >= 90.0f)
 	{
 		bIsRolling = false;

@@ -67,9 +67,7 @@ private:
 	FVector RotationOrigin;
 
 	FVector RollingDirection;
-
-	float DistanceFromOrigin;
-
+	
 	float Width;
 
 };
