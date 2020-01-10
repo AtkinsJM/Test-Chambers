@@ -210,14 +210,17 @@ FString APlayerCharacter::ConvertDecimalToBinary(int32 Decimal)
 
 AInteractable * APlayerCharacter::IsInteractablePresent()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Checking for interactable!"));
 	FHitResult HitResult;
 	if (GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(2 * Width, 0, 0), "Interactable") ||
 		GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(-2 * Width, 0, 0), "Interactable") ||
 		GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(0, 2 * Width, 0), "Interactable") ||
 		GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(0, -2 * Width, 0), "Interactable"))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Found interactable!"));
 		return Cast<AInteractable>(HitResult.Actor);
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Not found interactable!"));
 	return nullptr;
 }
 

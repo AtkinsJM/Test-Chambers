@@ -7,6 +7,7 @@
 #include "PlayerCharacter.h"
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
+#include "LaserGate.h"
 
 ALever::ALever()
 {
@@ -20,12 +21,21 @@ ALever::ALever()
 
 	LeverPullCue = nullptr;
 	LeverPushCue = nullptr;
+
+	LeverPullSpeed = 5.0f;
 }
 
 void ALever::BeginPlay()
 {
 	Super::BeginPlay();
 	LeverArmAngle = LeverArmMesh->GetComponentRotation().Roll;
+}
+
+void ALever::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	LeverArmMesh->SetRelativeRotation(FMath::RInterpTo(LeverArmMesh->GetRelativeRotation(), FRotator(0, 0, LeverArmAngle), DeltaTime, LeverPullSpeed));
 }
 
 void ALever::Interact(AActor * OtherActor)
@@ -42,7 +52,6 @@ void ALever::Interact(AActor * OtherActor)
 void ALever::PullLever()
 {
 	LeverArmAngle = -LeverArmAngle;
-	LeverArmMesh->SetRelativeRotation(FRotator(0, 0, LeverArmAngle));
 
 	if (LeverArmAngle > 0.0f)
 	{
@@ -57,5 +66,10 @@ void ALever::PullLever()
 		{
 			UGameplayStatics::PlaySound2D(GetWorld(), LeverPushCue);
 		}
+	}
+
+	for (ALaserGate* LaserGate : ControlledGates)
+	{
+		LaserGate->ToggleGate();
 	}
 }

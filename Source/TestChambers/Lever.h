@@ -29,13 +29,19 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
 	class USoundCue* LeverPushCue;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
+	float LeverPullSpeed;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Properties")
+	TArray<class ALaserGate*> ControlledGates;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
 	// Called every frame
-	//virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;
 
 	virtual void Interact(AActor* OtherActor) override;
 
