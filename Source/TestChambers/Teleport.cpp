@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
+#include "SpawnPoint.h"
 
 // Sets default values
 ATeleport::ATeleport()
@@ -27,6 +28,8 @@ ATeleport::ATeleport()
 	Mesh->SetupAttachment(Root);
 
 	TeleportDelay = 1.0f;
+
+	TeleportLocation = nullptr;
 
 	ActorToTeleport = nullptr;
 
@@ -50,7 +53,7 @@ void ATeleport::Tick(float DeltaTime)
 
 void ATeleport::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (bIsTeleporting) { return; }
+	if (bIsTeleporting || !TeleportLocation) { return; }
 	bIsTeleporting = true;
 	ActorToTeleport = OtherActor;
 	GetWorld()->GetTimerManager().SetTimer(TeleportTimerHandle, this, &ATeleport::Teleport, TeleportDelay, false);
@@ -63,7 +66,7 @@ void ATeleport::OnEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 
 void ATeleport::Teleport()
 {
-	ActorToTeleport->SetActorLocation(TeleportLocation.GetLocation());
+	ActorToTeleport->SetActorLocation(TeleportLocation->GetSpawnLocation());
 
 	if (TeleportCue)
 	{

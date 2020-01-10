@@ -28,7 +28,7 @@ public:
 	float TeleportDelay;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Properties")
-	FTransform TeleportLocation;
+	class ASpawnPoint* TeleportLocation;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
 	class USoundCue* TeleportCue;
