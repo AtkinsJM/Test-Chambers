@@ -22,14 +22,13 @@ ATeleport::ATeleport()
 	
 	ParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle System"));
 	ParticleSystem->SetupAttachment(Root);
-
-
+	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Cylinder Mesh"));
 	Mesh->SetupAttachment(Root);
 
 	TeleportDelay = 1.0f;
 
-	TeleportLocation = nullptr;
+	SpawnPoint = nullptr;
 
 	ActorToTeleport = nullptr;
 
@@ -53,7 +52,7 @@ void ATeleport::Tick(float DeltaTime)
 
 void ATeleport::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (bIsTeleporting || !TeleportLocation) { return; }
+	if (bIsTeleporting || !SpawnPoint) { return; }
 	bIsTeleporting = true;
 	ActorToTeleport = OtherActor;
 	GetWorld()->GetTimerManager().SetTimer(TeleportTimerHandle, this, &ATeleport::Teleport, TeleportDelay, false);
@@ -66,7 +65,7 @@ void ATeleport::OnEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 
 void ATeleport::Teleport()
 {
-	ActorToTeleport->SetActorLocation(TeleportLocation->GetSpawnLocation());
+	ActorToTeleport->SetActorLocation(SpawnPoint->GetSpawnLocation());
 
 	if (TeleportCue)
 	{
