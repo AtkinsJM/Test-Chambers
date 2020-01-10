@@ -50,7 +50,7 @@ public:
 
 
 private:
-	AActor* ActorToTeleport;
+	class APlayerCharacter* CharacterToTeleport;
 
 	FTimerHandle TeleportTimerHandle;
 

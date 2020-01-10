@@ -30,7 +30,7 @@ ATeleport::ATeleport()
 
 	SpawnPoint = nullptr;
 
-	ActorToTeleport = nullptr;
+	CharacterToTeleport = nullptr;
 
 	bIsTeleporting = false;
 }
@@ -53,8 +53,11 @@ void ATeleport::Tick(float DeltaTime)
 void ATeleport::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	if (bIsTeleporting || !SpawnPoint) { return; }
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
+	if (!PlayerCharacter) { return; }
 	bIsTeleporting = true;
-	ActorToTeleport = OtherActor;
+	CharacterToTeleport = PlayerCharacter;
+	CharacterToTeleport->SetCanMove(false);
 	GetWorld()->GetTimerManager().SetTimer(TeleportTimerHandle, this, &ATeleport::Teleport, TeleportDelay, false);
 }
 
@@ -65,12 +68,14 @@ void ATeleport::OnEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 
 void ATeleport::Teleport()
 {
-	ActorToTeleport->SetActorLocation(SpawnPoint->GetSpawnLocation());
+	CharacterToTeleport->SetActorLocation(SpawnPoint->GetSpawnLocation());
 
 	if (TeleportCue)
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), TeleportCue);
 	}
-	ActorToTeleport = nullptr;
+
+	CharacterToTeleport->SetCanMove(true);
+	CharacterToTeleport = nullptr;
 	bIsTeleporting = false;
 }

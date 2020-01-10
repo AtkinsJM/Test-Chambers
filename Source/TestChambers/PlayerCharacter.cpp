@@ -46,6 +46,7 @@ APlayerCharacter::APlayerCharacter()
 
 	Interactable = nullptr;
 
+	bCanMove = true;
 }
 
 // Called when the game starts or when spawned
@@ -91,6 +92,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::StartRolling(FVector RotationPoint)
 {
+	if (!bCanMove) { return; }
 	Interactable = nullptr;
 	// Get movement direction (x-y plane)
 	RollingDirection = FVector(RotationPoint.X != 0 ? FMath::Abs(RotationPoint.X) / RotationPoint.X : 0, RotationPoint.Y != 0 ? FMath::Abs(RotationPoint.Y) / RotationPoint.Y : 0, 0);

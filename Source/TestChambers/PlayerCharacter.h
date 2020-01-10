@@ -84,10 +84,11 @@ public:
 
 	void Interact();
 
+	FORCEINLINE void SetCanMove(bool Value) { bCanMove = Value; }
+
 private:
 	bool bIsRolling;
-
-	
+	bool bCanMove;
 
 	float RotationAngle;
 
