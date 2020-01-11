@@ -22,8 +22,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UStaticMeshComponent* Mesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UBoxComponent* BoxCollider;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	//class UBoxComponent* BoxCollider;
 
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	//class USphereComponent* InteractionVolume;

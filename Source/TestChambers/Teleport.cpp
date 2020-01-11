@@ -19,6 +19,7 @@ ATeleport::ATeleport()
 
 	Root = CreateDefaultSubobject<UBoxComponent>(TEXT("Root"));
 	RootComponent = Root;
+	Root->SetCollisionProfileName("Trigger");
 	
 	ParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle System"));
 	ParticleSystem->SetupAttachment(Root);

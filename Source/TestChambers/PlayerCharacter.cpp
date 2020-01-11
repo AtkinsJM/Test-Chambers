@@ -28,22 +28,12 @@ APlayerCharacter::APlayerCharacter()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(Root);
-
-	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
-	BoxCollider->SetupAttachment(Mesh);
-	BoxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	BoxCollider->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
-
-	//InteractionVolume = CreateDefaultSubobject<USphereComponent>(TEXT("Interaction Volume"));
-	//InteractionVolume->SetupAttachment(Root);
-
+	Mesh->SetCollisionProfileName("Player");
+	
 	RollingSpeed = 360.0f;
 
 	RollCue = nullptr;
 	
-	BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnBeginOverlap);
-	BoxCollider->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::OnEndOverlap);
-
 	Interactable = nullptr;
 
 	bCanMove = true;
@@ -53,6 +43,9 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Mesh->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnBeginOverlap);
+	Mesh->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::OnEndOverlap);
 
 	SetActorRotation(FRotator(0));
 
@@ -144,6 +137,7 @@ void APlayerCharacter::FinishRolling()
 bool APlayerCharacter::IsBlocked(FVector Direction)
 {
 	FHitResult HitResult;
+	
 	if (GetWorld()->LineTraceSingleByChannel(OUT HitResult, GetActorLocation(), GetActorLocation() + (Direction * Width * 2), ECollisionChannel::ECC_WorldStatic))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *HitResult.Actor->GetName());
@@ -210,17 +204,14 @@ FString APlayerCharacter::ConvertDecimalToBinary(int32 Decimal)
 
 AInteractable * APlayerCharacter::IsInteractablePresent()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Checking for interactable!"));
 	FHitResult HitResult;
 	if (GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(2 * Width, 0, 0), "Interactable") ||
 		GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(-2 * Width, 0, 0), "Interactable") ||
 		GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(0, 2 * Width, 0), "Interactable") ||
 		GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(0, -2 * Width, 0), "Interactable"))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Found interactable!"));
 		return Cast<AInteractable>(HitResult.Actor);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Not found interactable!"));
 	return nullptr;
 }
 
