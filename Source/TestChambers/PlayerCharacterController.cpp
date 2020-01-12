@@ -6,6 +6,7 @@
 #include "FollowCamera.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "Blueprint/UserWidget.h"
 
 APlayerCharacterController::APlayerCharacterController()
 {
@@ -66,14 +67,14 @@ void APlayerCharacterController::BeginPlay()
 	}
 	*/
 
-	/*
+	
 	if (HUDOverlayAsset != nullptr)
 	{
 		HUDOverlay = CreateWidget<UUserWidget>(this, HUDOverlayAsset);
 		HUDOverlay->AddToViewport();
 		HUDOverlay->SetVisibility(ESlateVisibility::Visible);
 	}
-	*/
+	
 }
 
 void APlayerCharacterController::Tick(float DeltaTime)

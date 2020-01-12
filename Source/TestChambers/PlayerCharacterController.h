@@ -22,6 +22,11 @@ public:
 
 	class APlayerCharacter* PlayerCharacter;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+	TSubclassOf<class UUserWidget> HUDOverlayAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+	UUserWidget* HUDOverlay;
 
 protected:
 	// Called when the game starts or when spawned
