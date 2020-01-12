@@ -27,6 +27,7 @@ void AInteractable::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GetComponents<UStaticMeshComponent>(MeshesToHighlight, true);
 }
 
 // Called every frame
@@ -44,3 +45,11 @@ void AInteractable::Interact(AActor * OtherActor)
 	}
 }
 
+void AInteractable::ToggleHighlight(bool Value)
+{
+	if (MeshesToHighlight.Num() == 0) { return; }
+	for (UStaticMeshComponent* Mesh : MeshesToHighlight)
+	{
+		Mesh->SetRenderCustomDepth(Value);
+	}
+}

@@ -35,4 +35,8 @@ public:
 	UFUNCTION()
 	virtual void Interact(AActor* OtherActor);
 
+	void ToggleHighlight(bool Value);
+
+private:
+	TArray<class UStaticMeshComponent*> MeshesToHighlight;
 };
