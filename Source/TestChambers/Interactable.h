@@ -24,6 +24,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
 	class USoundCue* InteractCue;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
+	FString InteractionPrompt;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

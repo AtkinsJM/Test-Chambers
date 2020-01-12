@@ -85,9 +85,8 @@ public:
 	void Interact();
 
 	FORCEINLINE void SetCanMove(bool Value) { bCanMove = Value; }
-
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE bool HasInteractable() { return Interactable != nullptr; }
+	
+	FORCEINLINE void SetInteractable(AInteractable* _Interactable) { Interactable = _Interactable; }
 
 private:
 	bool bIsRolling;

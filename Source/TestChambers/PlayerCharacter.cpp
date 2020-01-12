@@ -229,4 +229,5 @@ void APlayerCharacter::Interact()
 {
 	if (!Interactable) { return; }
 	Interactable->Interact(this);
+	Interactable = IsInteractablePresent();
 }

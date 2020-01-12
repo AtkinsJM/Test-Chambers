@@ -59,6 +59,7 @@ void ALever::PullLever()
 		{
 			UGameplayStatics::PlaySound2D(GetWorld(), LeverPullCue);
 		}
+		InteractionPrompt = "E  -  Push lever";
 	}
 	else
 	{
@@ -66,6 +67,7 @@ void ALever::PullLever()
 		{
 			UGameplayStatics::PlaySound2D(GetWorld(), LeverPushCue);
 		}
+		InteractionPrompt = "E  -  Pull lever";
 	}
 
 	for (ALaserGate* LaserGate : ControlledGates)

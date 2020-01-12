@@ -20,6 +20,8 @@ AInteractable::AInteractable()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(Root);
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	InteractionPrompt = "E  -  Interact";
 }
 
 // Called when the game starts or when spawned
