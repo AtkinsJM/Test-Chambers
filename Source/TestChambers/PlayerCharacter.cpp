@@ -14,6 +14,8 @@
 #include "Pickup.h"
 #include "DoorKey.h"
 #include "Interactable.h"
+#include "Teleport.h"
+#include "MovingPlatform.h"
 
 #define OUT
 
@@ -132,6 +134,7 @@ void APlayerCharacter::Roll(float DeltaTime)
 
 void APlayerCharacter::FinishRolling()
 {
+	CheckOccupiedSpace();
 	if (RollCue)
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), RollCue);
@@ -147,10 +150,14 @@ void APlayerCharacter::FinishRolling()
 bool APlayerCharacter::IsBlocked(FVector Direction)
 {
 	FHitResult HitResult;
-	
-	if (GetWorld()->LineTraceSingleByChannel(OUT HitResult, GetActorLocation(), GetActorLocation() + (Direction * Width * 2), ECollisionChannel::ECC_WorldStatic))
+	FVector TargetLocation = GetActorLocation() + (Direction * Width * 2);
+	if (GetWorld()->LineTraceSingleByChannel(OUT HitResult, GetActorLocation(), TargetLocation, ECollisionChannel::ECC_WorldStatic))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *HitResult.Actor->GetName());
+		return true;
+	}
+	else if (!GetWorld()->LineTraceSingleByChannel(OUT HitResult, TargetLocation, TargetLocation + FVector(0, 0, -2 * Width), ECollisionChannel::ECC_WorldStatic))
+	{
 		return true;
 	}
 	return false;
@@ -230,4 +237,17 @@ void APlayerCharacter::Interact()
 	if (!Interactable) { return; }
 	Interactable->Interact(this);
 	Interactable = IsInteractablePresent();
+}
+
+void APlayerCharacter::CheckOccupiedSpace()
+{
+	FHitResult HitResult;
+	if (GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(0, 0, -2 * Width), "OverlapOnlyPawn"))
+	{
+		AActivatable* Activatable = Cast<AActivatable>(HitResult.Actor);
+		if (Activatable)
+		{
+			Activatable->Activate(this);
+		}
+	}	
 }

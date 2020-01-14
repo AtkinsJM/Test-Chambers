@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Activatable.h"
 #include "Teleport.generated.h"
 
 UCLASS()
-class TESTCHAMBERS_API ATeleport : public AActor
+class TESTCHAMBERS_API ATeleport : public AActivatable
 {
 	GENERATED_BODY()
 	
@@ -16,14 +16,8 @@ public:
 	ATeleport();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UBoxComponent* Root;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UParticleSystemComponent* ParticleSystem;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UStaticMeshComponent* Mesh;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float TeleportDelay;
 
@@ -48,6 +42,7 @@ public:
 
 	void Teleport();
 
+	virtual void Activate(AActor* Activator) override;
 
 private:
 	class APlayerCharacter* CharacterToTeleport;

@@ -88,6 +88,8 @@ public:
 	
 	FORCEINLINE void SetInteractable(AInteractable* _Interactable) { Interactable = _Interactable; }
 
+	void CheckOccupiedSpace();
+
 private:
 	bool bIsRolling;
 	bool bCanMove;

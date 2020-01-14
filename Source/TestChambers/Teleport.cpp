@@ -16,16 +16,9 @@ ATeleport::ATeleport()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	Root = CreateDefaultSubobject<UBoxComponent>(TEXT("Root"));
-	RootComponent = Root;
-	Root->SetCollisionProfileName("Trigger");
-	
+		
 	ParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle System"));
 	ParticleSystem->SetupAttachment(Root);
-	
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Cylinder Mesh"));
-	Mesh->SetupAttachment(Root);
 
 	TeleportDelay = 1.0f;
 
@@ -40,8 +33,8 @@ ATeleport::ATeleport()
 void ATeleport::BeginPlay()
 {
 	Super::BeginPlay();
-	Root->OnComponentBeginOverlap.AddDynamic(this, &ATeleport::OnBeginOverlap);
-	Root->OnComponentEndOverlap.AddDynamic(this, &ATeleport::OnEndOverlap);
+	//Root->OnComponentBeginOverlap.AddDynamic(this, &ATeleport::OnBeginOverlap);
+	//Root->OnComponentEndOverlap.AddDynamic(this, &ATeleport::OnEndOverlap);
 }
 
 // Called every frame
@@ -79,4 +72,10 @@ void ATeleport::Teleport()
 	CharacterToTeleport->SetCanMove(true);
 	CharacterToTeleport = nullptr;
 	bIsTeleporting = false;
+}
+
+void ATeleport::Activate(AActor* Activator)
+{
+	Super::Activate(Activator);
+	
 }

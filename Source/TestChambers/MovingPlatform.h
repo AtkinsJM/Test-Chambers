@@ -3,23 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Activatable.h"
 #include "MovingPlatform.generated.h"
 
+/**
+ *
+ */
 UCLASS()
-class TESTCHAMBERS_API AMovingPlatform : public AActor
+class TESTCHAMBERS_API AMovingPlatform : public AActivatable
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
 	AMovingPlatform();
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UBoxComponent* Root;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UStaticMeshComponent* Mesh;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Waypoints")
 	TArray<AActor*> Waypoints;
@@ -37,11 +34,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
-	UFUNCTION()
-	virtual void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-	UFUNCTION()
-	virtual void OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	virtual void Activate(AActor* Activator) override;
 
 	void SetNewDestination();
 
