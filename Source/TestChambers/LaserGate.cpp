@@ -3,7 +3,9 @@
 
 #include "LaserGate.h"
 #include "Components/BoxComponent.h"
+#include "Components/AudioComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 ALaserGate::ALaserGate()
@@ -18,6 +20,9 @@ ALaserGate::ALaserGate()
 	ParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle System"));
 	ParticleSystem->SetupAttachment(Root);
 
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Component"));
+	AudioComponent->SetupAttachment(Root);
+
 	bIsGateActive = true;
 }
 
@@ -31,6 +36,16 @@ void ALaserGate::BeginPlay()
 		Root->SetCollisionProfileName("NoCollision");
 		ParticleSystem->Deactivate();
 	}
+
+	if (LaserGateHumCue)
+	{
+		AudioComponent->SetSound(LaserGateHumCue);
+		if (bIsGateActive)
+		{
+			AudioComponent->Play();
+		}
+	}
+	
 }
 
 // Called every frame
@@ -47,11 +62,13 @@ void ALaserGate::ToggleGate()
 	{
 		Root->SetCollisionProfileName("BlockAll");
 		ParticleSystem->Activate();
+		AudioComponent->Play();
 	}
 	else
 	{
 		Root->SetCollisionProfileName("NoCollision");
 		ParticleSystem->Deactivate();
+		AudioComponent->Stop();
 	}
 }
 

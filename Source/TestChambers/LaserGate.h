@@ -21,6 +21,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UParticleSystemComponent* ParticleSystem;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UAudioComponent* AudioComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
+	class USoundCue* LaserGateHumCue;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
 	bool bIsGateActive;
 
