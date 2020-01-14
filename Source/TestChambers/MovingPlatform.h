@@ -39,6 +39,8 @@ public:
 
 	void SetNewDestination();
 
+	void MovePlatformTo(FVector NewLocation);
+
 private:
 	class APlayerCharacter* Passenger;
 

@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "MovingPlatform.h"
 #include "PlayerCharacter.h"
 #include "Engine/World.h"
@@ -45,22 +44,8 @@ void AMovingPlatform::Tick(float DeltaTime)
 
 	if (bIsMoving)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Moving platform!"));
-
 		FVector NewLocation = FMath::VInterpConstantTo(GetActorLocation(), TargetLocation, DeltaTime, MovementSpeed);
-		UE_LOG(LogTemp, Warning, TEXT("New location: %s"), *NewLocation.ToString());
-		SetActorLocation(NewLocation);
-		Passenger->SetActorLocation(NewLocation + PassengerOffset);
-
-		float Distance = (NewLocation - TargetLocation).Size();
-		if (Distance < 1.0f)
-		{
-			SetActorLocation(TargetLocation);
-			Passenger->SetActorLocation(TargetLocation + PassengerOffset);
-			bIsMoving = false;
-			Passenger->SetCanMove(true);
-			Passenger = nullptr;
-		}
+		MovePlatformTo(NewLocation);
 	}
 }
 
@@ -81,9 +66,24 @@ void AMovingPlatform::Activate(AActor* Activator)
 
 void AMovingPlatform::SetNewDestination()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Setting new destination for platform!"));
 	PassengerOffset = Passenger->GetActorLocation() - GetActorLocation();
 	CurrentWaypointIndex = (CurrentWaypointIndex + 1) % WaypointLocations.Num();
 	TargetLocation = WaypointLocations[CurrentWaypointIndex];
 	bIsMoving = true;
+}
+
+void AMovingPlatform::MovePlatformTo(FVector NewLocation)
+{
+	SetActorLocation(NewLocation);
+	Passenger->SetActorLocation(NewLocation + PassengerOffset);
+
+	float Distance = (NewLocation - TargetLocation).Size();
+	if (Distance < 1.0f)
+	{
+		SetActorLocation(TargetLocation);
+		Passenger->SetActorLocation(TargetLocation + PassengerOffset);
+		bIsMoving = false;
+		Passenger->SetCanMove(true);
+		Passenger = nullptr;
+	}
 }

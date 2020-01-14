@@ -41,6 +41,19 @@ void ATeleport::Tick(float DeltaTime)
 
 }
 
+void ATeleport::Activate(AActor* Activator)
+{
+	Super::Activate(Activator);
+
+	if (bIsTeleporting || !SpawnPoint) { return; }
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Activator);
+	if (!PlayerCharacter) { return; }
+	bIsTeleporting = true;
+	CharacterToTeleport = PlayerCharacter;
+	CharacterToTeleport->SetCanMove(false);
+	GetWorld()->GetTimerManager().SetTimer(TeleportTimerHandle, this, &ATeleport::Teleport, TeleportDelay, false);
+}
+
 void ATeleport::Teleport()
 {
 	CharacterToTeleport->SetActorLocation(SpawnPoint->GetSpawnLocation());
@@ -53,17 +66,4 @@ void ATeleport::Teleport()
 	CharacterToTeleport->SetCanMove(true);
 	CharacterToTeleport = nullptr;
 	bIsTeleporting = false;
-}
-
-void ATeleport::Activate(AActor* Activator)
-{
-	Super::Activate(Activator);
-	
-	if (bIsTeleporting || !SpawnPoint) { return; }
-	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Activator);
-	if (!PlayerCharacter) { return; }
-	bIsTeleporting = true;
-	CharacterToTeleport = PlayerCharacter;
-	CharacterToTeleport->SetCanMove(false);
-	GetWorld()->GetTimerManager().SetTimer(TeleportTimerHandle, this, &ATeleport::Teleport, TeleportDelay, false);
 }

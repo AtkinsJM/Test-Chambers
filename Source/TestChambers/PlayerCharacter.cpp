@@ -150,12 +150,8 @@ bool APlayerCharacter::IsBlocked(FVector Direction)
 {
 	FHitResult HitResult;
 	FVector TargetLocation = GetActorLocation() + (Direction * Width * 2);
-	if (GetWorld()->LineTraceSingleByChannel(OUT HitResult, GetActorLocation(), TargetLocation, ECollisionChannel::ECC_WorldStatic))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *HitResult.Actor->GetName());
-		return true;
-	}
-	else if (!GetWorld()->LineTraceSingleByChannel(OUT HitResult, TargetLocation, TargetLocation + FVector(0, 0, -2 * Width), ECollisionChannel::ECC_WorldStatic))
+	if (GetWorld()->LineTraceSingleByChannel(OUT HitResult, GetActorLocation(), TargetLocation, ECollisionChannel::ECC_WorldStatic) ||
+		!GetWorld()->LineTraceSingleByChannel(OUT HitResult, TargetLocation, TargetLocation + FVector(0, 0, -2 * Width), ECollisionChannel::ECC_WorldStatic))
 	{
 		return true;
 	}
