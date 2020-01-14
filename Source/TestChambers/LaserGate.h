@@ -25,7 +25,10 @@ public:
 	class UAudioComponent* AudioComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
-	class USoundCue* LaserGateHumCue;
+	class USoundCue* LaserGateActivateCue;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
+	USoundCue* LaserGateDeactivateCue;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
 	bool bIsGateActive;

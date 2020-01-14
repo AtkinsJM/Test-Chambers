@@ -6,6 +6,7 @@
 #include "Components/AudioComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ALaserGate::ALaserGate()
@@ -37,13 +38,9 @@ void ALaserGate::BeginPlay()
 		ParticleSystem->Deactivate();
 	}
 
-	if (LaserGateHumCue)
+	if (bIsGateActive)
 	{
-		AudioComponent->SetSound(LaserGateHumCue);
-		if (bIsGateActive)
-		{
-			AudioComponent->Play();
-		}
+		AudioComponent->Play();
 	}
 	
 }
@@ -63,12 +60,20 @@ void ALaserGate::ToggleGate()
 		Root->SetCollisionProfileName("BlockAll");
 		ParticleSystem->Activate();
 		AudioComponent->Play();
+		if (LaserGateActivateCue)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), LaserGateActivateCue, GetActorLocation());
+		}
 	}
 	else
 	{
 		Root->SetCollisionProfileName("NoCollision");
 		ParticleSystem->Deactivate();
 		AudioComponent->Stop();
+		if (LaserGateDeactivateCue)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), LaserGateDeactivateCue, GetActorLocation());
+		}
 	}
 }
 

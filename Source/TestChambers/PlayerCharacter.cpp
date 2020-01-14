@@ -88,24 +88,23 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void APlayerCharacter::StartRolling(FVector RotationPoint)
 {
 	if (!bCanMove) { return; }
+	
+	// Get movement direction (x-y plane)
+	RollingDirection = FVector(RotationPoint.X != 0 ? FMath::Abs(RotationPoint.X) / RotationPoint.X : 0, RotationPoint.Y != 0 ? FMath::Abs(RotationPoint.Y) / RotationPoint.Y : 0, 0);
+	if (IsBlocked(RollingDirection)) { return; }
 
 	if (Interactable)
 	{
 		Interactable->ToggleHighlight(false);
 		Interactable = nullptr;
-	}	
+	}
 
-	// Get movement direction (x-y plane)
-	RollingDirection = FVector(RotationPoint.X != 0 ? FMath::Abs(RotationPoint.X) / RotationPoint.X : 0, RotationPoint.Y != 0 ? FMath::Abs(RotationPoint.Y) / RotationPoint.Y : 0, 0);
-	if (IsBlocked(RollingDirection)) { return; }
 	bIsRolling = true;
 	// Initialise rotation angle
 	RotationAngle = 0.0f;
 	// Get rotation origin (point/axis about which rotation occurs)
 	RotationOrigin = GetActorLocation() + RotationPoint;
-	
 }
-
 
 void APlayerCharacter::Roll(float DeltaTime)
 {
