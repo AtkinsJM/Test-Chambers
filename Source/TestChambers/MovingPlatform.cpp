@@ -2,8 +2,6 @@
 
 
 #include "MovingPlatform.h"
-#include "Components/BoxComponent.h"
-#include "Components/StaticMeshComponent.h"
 #include "PlayerCharacter.h"
 #include "Engine/World.h"
 

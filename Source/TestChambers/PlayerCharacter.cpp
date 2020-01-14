@@ -161,18 +161,6 @@ bool APlayerCharacter::IsBlocked(FVector Direction)
 		return true;
 	}
 	return false;
-
-	/*
-	RaycastHit hit;
-	if (Physics.Raycast(transform.position, dir, out hit, bounds.extents.x * 2))
-	{
-		if (!hit.collider.isTrigger)
-		{
-			return true;
-		}
-	}
-	return false;
-	*/
 }
 
 void APlayerCharacter::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

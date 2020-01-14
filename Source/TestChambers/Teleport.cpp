@@ -2,8 +2,6 @@
 
 
 #include "Teleport.h"
-#include "Components/BoxComponent.h"
-#include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PlayerCharacter.h"
 #include "Engine/World.h"
@@ -33,30 +31,13 @@ ATeleport::ATeleport()
 void ATeleport::BeginPlay()
 {
 	Super::BeginPlay();
-	//Root->OnComponentBeginOverlap.AddDynamic(this, &ATeleport::OnBeginOverlap);
-	//Root->OnComponentEndOverlap.AddDynamic(this, &ATeleport::OnEndOverlap);
+
 }
 
 // Called every frame
 void ATeleport::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-}
-
-void ATeleport::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
-	if (bIsTeleporting || !SpawnPoint) { return; }
-	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
-	if (!PlayerCharacter) { return; }
-	bIsTeleporting = true;
-	CharacterToTeleport = PlayerCharacter;
-	CharacterToTeleport->SetCanMove(false);
-	GetWorld()->GetTimerManager().SetTimer(TeleportTimerHandle, this, &ATeleport::Teleport, TeleportDelay, false);
-}
-
-void ATeleport::OnEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
-{
 
 }
 
@@ -78,4 +59,11 @@ void ATeleport::Activate(AActor* Activator)
 {
 	Super::Activate(Activator);
 	
+	if (bIsTeleporting || !SpawnPoint) { return; }
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Activator);
+	if (!PlayerCharacter) { return; }
+	bIsTeleporting = true;
+	CharacterToTeleport = PlayerCharacter;
+	CharacterToTeleport->SetCanMove(false);
+	GetWorld()->GetTimerManager().SetTimer(TeleportTimerHandle, this, &ATeleport::Teleport, TeleportDelay, false);
 }
