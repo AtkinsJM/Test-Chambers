@@ -4,6 +4,7 @@
 #include "TransitionPortal.h"
 #include "PlayerCharacter.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ATransitionPortal::ATransitionPortal()
@@ -32,7 +33,7 @@ void ATransitionPortal::Activate(AActor* Activator)
 {
 	Super::Activate(Activator);
 
-	if (bIsTeleporting) { return; }
+	if (bIsTeleporting || LevelToLoad == "") { return; }
 	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Activator);
 	if (!PlayerCharacter) { return; }
 	bIsTeleporting = true;
@@ -46,4 +47,7 @@ void ATransitionPortal::Teleport()
 	Super::Teleport();
 
 	bIsTeleporting = false;
+	// TODO: check level exists before attempting to open
+	// TODO: use fade screen and delay on opening level.
+	UGameplayStatics::OpenLevel(GetWorld(), FName(*LevelToLoad));
 }
