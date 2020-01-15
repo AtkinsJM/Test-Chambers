@@ -4,6 +4,8 @@
 #include "Portal.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PlayerCharacter.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 APortal::APortal()
 {
@@ -39,5 +41,12 @@ void APortal::Activate(AActor* Activator)
 {
 	Super::Activate(Activator);
 
+}
 
+void APortal::Teleport()
+{
+	if (TeleportCue)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), TeleportCue);
+	}	
 }

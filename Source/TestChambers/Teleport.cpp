@@ -4,8 +4,7 @@
 #include "Teleport.h"
 #include "PlayerCharacter.h"
 #include "Engine/World.h"
-#include "Sound/SoundCue.h"
-#include "Kismet/GameplayStatics.h"
+
 #include "SpawnPoint.h"
 
 // Sets default values
@@ -46,12 +45,9 @@ void ATeleport::Activate(AActor* Activator)
 
 void ATeleport::Teleport()
 {
-	CharacterToTeleport->SetActorLocation(SpawnPoint->GetSpawnLocation());
+	Super::Teleport();
 
-	if (TeleportCue)
-	{
-		UGameplayStatics::PlaySound2D(GetWorld(), TeleportCue);
-	}
+	CharacterToTeleport->SetActorLocation(SpawnPoint->GetSpawnLocation());
 
 	CharacterToTeleport->SetCanMove(true);
 	CharacterToTeleport = nullptr;

@@ -44,6 +44,8 @@ public:
 
 	virtual void Activate(AActor* Activator) override;
 
+	virtual void Teleport();
+
 private:
 	
 };

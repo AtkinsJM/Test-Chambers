@@ -4,26 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "Portal.h"
-#include "Teleport.generated.h"
+#include "TransitionPortal.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class TESTCHAMBERS_API ATeleport : public APortal
+class TESTCHAMBERS_API ATransitionPortal : public APortal
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	// Sets default values for this actor's properties
-	ATeleport();
+	ATransitionPortal();
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Properties")
-	class ASpawnPoint* SpawnPoint;
+	FString LevelToLoad;
 
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
