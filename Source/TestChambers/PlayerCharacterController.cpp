@@ -31,7 +31,10 @@ void APlayerCharacterController::OnPossess(APawn * Pawn)
 	Super::OnPossess(Pawn);
 
 	PlayerCharacter = Cast<APlayerCharacter>(Pawn);
-
+	if (PlayerCharacter)
+	{
+		SetAudioListenerOverride(PlayerCharacter->Root, PlayerCharacter->GetActorLocation(), PlayerCharacter->GetActorRotation());
+	}
 	if (!FollowCamera)
 	{
 		AssignCamera();
@@ -40,6 +43,7 @@ void APlayerCharacterController::OnPossess(APawn * Pawn)
 	{
 		FollowCamera->SetTarget(PlayerCharacter);
 	}
+	
 }
 
 void APlayerCharacterController::OnUnPossess()
