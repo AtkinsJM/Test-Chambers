@@ -2,7 +2,6 @@
 
 
 #include "Teleport.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "PlayerCharacter.h"
 #include "Engine/World.h"
 #include "Sound/SoundCue.h"
@@ -14,17 +13,8 @@ ATeleport::ATeleport()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-		
-	ParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle System"));
-	ParticleSystem->SetupAttachment(Root);
-
-	TeleportDelay = 1.0f;
-
+	
 	SpawnPoint = nullptr;
-
-	CharacterToTeleport = nullptr;
-
-	bIsTeleporting = false;
 }
 
 // Called when the game starts or when spawned
