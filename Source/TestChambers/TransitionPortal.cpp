@@ -5,6 +5,7 @@
 #include "PlayerCharacter.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "TestChambersGameInstance.h"
 
 // Sets default values
 ATransitionPortal::ATransitionPortal()
@@ -49,5 +50,14 @@ void ATransitionPortal::Teleport()
 	bIsTeleporting = false;
 	// TODO: check level exists before attempting to open
 	// TODO: use fade screen and delay on opening level.
-	UGameplayStatics::OpenLevel(GetWorld(), FName(*LevelToLoad));
+	UTestChambersGameInstance* GameInstance = Cast<UTestChambersGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Game instance! Yeah"));
+		GameInstance->StartLoadLevel(LevelToLoad);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No game instance found..."));
+	}
 }
