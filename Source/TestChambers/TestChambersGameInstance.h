@@ -17,6 +17,23 @@ class TESTCHAMBERS_API UTestChambersGameInstance : public UGameInstance
 public:
 	UTestChambersGameInstance();
 
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	//bool bIsPaused;
+
+	bool bIsNewLevel;
+
+	bool bIsNewGame;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+		bool bIsTransitioning;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
+		float TransitionDelay;
+
+public:
+	
+	virtual void LoadComplete(const float LoadTime, const FString& MapName) override;
+
 	//void SaveGame(FString SlotName);
 	//void LoadGame(FString SlotName);
 
@@ -32,22 +49,6 @@ public:
 
 	//UFUNCTION(BlueprintCallable)
 	//void SetPauseState(bool val);
-
-public:
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
-	//bool bIsPaused;
-
-
-	bool bIsNewLevel;
-
-	bool bIsNewGame;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
-	bool bIsTransitioning;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
-	float TransitionDelay;
-
 private:
 
 	FTimerHandle TransitionTimerHandle;

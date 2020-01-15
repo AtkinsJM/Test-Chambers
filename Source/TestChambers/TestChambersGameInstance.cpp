@@ -12,6 +12,12 @@ UTestChambersGameInstance::UTestChambersGameInstance()
 	TransitionDelay = 1.0f;
 }
 
+void UTestChambersGameInstance::LoadComplete(const float LoadTime, const FString & MapName)
+{
+	Super::LoadComplete(LoadTime, MapName);
+	bIsTransitioning = false;
+}
+
 void UTestChambersGameInstance::StartLoadLevel(FString LevelName)
 {
 	if (LevelName == "") { return; }
@@ -33,7 +39,7 @@ void UTestChambersGameInstance::LoadLevel()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Loading level..."));
 	if (LevelToLoad == "") { return; }
-	bIsTransitioning = false;
+	
 	UGameplayStatics::OpenLevel(GetWorld(), FName(*LevelToLoad));
 }
 
@@ -41,7 +47,6 @@ void UTestChambersGameInstance::QuitGame()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Quitting..."));
 	if (LevelToLoad == "") { return; }
-	bIsTransitioning = false;
 	TEnumAsByte< EQuitPreference::Type > QuitPreference;
 	UKismetSystemLibrary::QuitGame(GetWorld(), GetPrimaryPlayerController(), QuitPreference, false);
 }
