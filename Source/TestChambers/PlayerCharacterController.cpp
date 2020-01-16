@@ -7,12 +7,15 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Blueprint/UserWidget.h"
+#include "TestChambersGameInstance.h"
 
 APlayerCharacterController::APlayerCharacterController()
 {
 	bIsRolling = false;
 
 	FollowCamera = nullptr;
+
+	GameInstance = nullptr;
 }
 
 void APlayerCharacterController::SetupInputComponent()
@@ -23,6 +26,7 @@ void APlayerCharacterController::SetupInputComponent()
 	InputComponent->BindAxis(TEXT("SidewaysMovement"), this, &APlayerCharacterController::MoveSideways);
 
 	InputComponent->BindAction(TEXT("Interact"), IE_Pressed, this, &APlayerCharacterController::Interact);
+	InputComponent->BindAction(TEXT("QuitToMenu"), IE_Pressed, this, &APlayerCharacterController::ReturnToMenu);
 
 }
 
@@ -78,6 +82,8 @@ void APlayerCharacterController::BeginPlay()
 		HUDOverlay->AddToViewport();
 		HUDOverlay->SetVisibility(ESlateVisibility::Visible);
 	}
+
+	GameInstance = Cast<UTestChambersGameInstance>(GetGameInstance());
 	
 }
 
@@ -101,6 +107,18 @@ void APlayerCharacterController::Interact()
 {
 	if (!PlayerCharacter) { return; }
 	PlayerCharacter->Interact();
+}
+
+void APlayerCharacterController::ReturnToMenu()
+{
+	if (!GameInstance) { return; }
+	FString MapName = GetWorld()->GetMapName();
+	MapName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
+	if (MapName != "Main_Menu")
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Returning to menu!"));
+		GameInstance->StartLoadLevel("Main_Menu");
+	}
 }
 
 void APlayerCharacterController::MoveForward(float Value)

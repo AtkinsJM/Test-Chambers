@@ -50,8 +50,12 @@ public:
 
 	void Interact();
 
+	void ReturnToMenu();
+
 private:
 	bool bIsRolling;
 	
 	class AFollowCamera* FollowCamera;
+
+	class UTestChambersGameInstance* GameInstance;
 };

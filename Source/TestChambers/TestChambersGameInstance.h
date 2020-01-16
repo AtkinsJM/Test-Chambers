@@ -25,17 +25,18 @@ public:
 	bool bIsNewGame;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
-		bool bIsTransitioning;
+	bool bIsTransitioning;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
-		float TransitionDelay;
+	float TransitionDelay;
 
 public:
+	virtual void OnStart() override;
 	
 	virtual void LoadComplete(const float LoadTime, const FString& MapName) override;
 
-	//void SaveGame(FString SlotName);
-	//void LoadGame(FString SlotName);
+	void SaveGame(FString SlotName);
+	class UTestChambersSaveGame* LoadGame(FString SlotName);
 
 	//void FinishSaveLoad();
 
@@ -54,4 +55,6 @@ private:
 	FTimerHandle TransitionTimerHandle;
 
 	FString LevelToLoad;
+
+	FString CurrentLevelName;
 };
