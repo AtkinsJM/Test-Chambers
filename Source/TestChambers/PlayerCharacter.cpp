@@ -184,6 +184,7 @@ void APlayerCharacter::PickUp(APickup* Pickup)
 void APlayerCharacter::PickUpKey(ADoorKey * Key)
 {
 	KeyFlags |= (int32)Key->GetKeyType();
+	
 	//FString FlagsBinary = ConvertDecimalToBinary(KeyFlags);
 	//UE_LOG(LogTemp, Warning, TEXT("%s"), *FlagsBinary);
 }
