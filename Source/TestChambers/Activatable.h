@@ -21,6 +21,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UStaticMeshComponent* Mesh;
 
+
+	bool bIsActivatable;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,4 +34,6 @@ public:
 
 	UFUNCTION()
 	virtual void Activate(AActor* Activator);
+
+	FORCEINLINE bool IsActivatable() { return bIsActivatable; }
 };
