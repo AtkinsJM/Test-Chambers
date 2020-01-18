@@ -12,6 +12,10 @@ AFloorSwitch::AFloorSwitch()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Base Mesh"));
+	BaseMesh->SetupAttachment(Root);
+	BaseMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	SwitchCue = nullptr;
 	ForcefieldToToggle = nullptr;
 }

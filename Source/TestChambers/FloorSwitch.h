@@ -17,6 +17,9 @@ class TESTCHAMBERS_API AFloorSwitch : public AActivatable
 public:
 	// Sets default values for this actor's properties
 	AFloorSwitch();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UStaticMeshComponent* BaseMesh;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
 	class USoundCue* SwitchCue;
