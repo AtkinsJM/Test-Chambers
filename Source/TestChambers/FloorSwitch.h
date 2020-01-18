@@ -22,7 +22,7 @@ public:
 	class USoundCue* SwitchCue;
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Properties")
-	AActor* ActorToToggle;
+	class AForcefield* ForcefieldToToggle;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	class UMaterialInterface* PressedMaterial;

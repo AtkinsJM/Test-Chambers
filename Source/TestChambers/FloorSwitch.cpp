@@ -5,6 +5,7 @@
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialInterface.h"
+#include "Forcefield.h"
 
 AFloorSwitch::AFloorSwitch()
 {
@@ -12,7 +13,7 @@ AFloorSwitch::AFloorSwitch()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SwitchCue = nullptr;
-	ActorToToggle = nullptr;
+	ForcefieldToToggle = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -50,10 +51,10 @@ void AFloorSwitch::Press()
 			Mesh->SetMaterial(0, PressedMaterial);
 		}
 	}
-	if (ActorToToggle)
+	if (ForcefieldToToggle)
 	{
-		ActorToToggle->Destroy();
-		ActorToToggle = nullptr;
+		ForcefieldToToggle->Destroy();
+		ForcefieldToToggle = nullptr;
 	}
 	bIsActivatable = false;
 }
