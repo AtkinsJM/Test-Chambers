@@ -177,6 +177,7 @@ void APlayerCharacter::PickUp(APickup* Pickup)
 	if (Key)
 	{
 		PickUpKey(Key);
+		AddKeyToInventory(Key);
 	}
 	Pickup->PickedUpBy(this);
 }

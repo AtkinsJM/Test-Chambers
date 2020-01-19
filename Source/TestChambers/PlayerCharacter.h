@@ -22,12 +22,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UStaticMeshComponent* Mesh;
 
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	//class UBoxComponent* BoxCollider;
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	//class USphereComponent* InteractionVolume;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float RollingSpeed;
 
@@ -66,12 +60,16 @@ public:
 
 	UFUNCTION()
 	virtual void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	
 	UFUNCTION()
 	virtual void OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	void PickUp(class APickup* Pickup);
 
 	void PickUpKey(class ADoorKey* Key);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddKeyToInventory(ADoorKey* Key);
 
 	FString ConvertDecimalToBinary(int32 Decimal);
 
