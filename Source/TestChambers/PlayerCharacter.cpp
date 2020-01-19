@@ -177,7 +177,6 @@ void APlayerCharacter::PickUp(APickup* Pickup)
 	if (Key)
 	{
 		PickUpKey(Key);
-		AddKeyToInventory(Key);
 	}
 	Pickup->PickedUpBy(this);
 }
@@ -185,7 +184,8 @@ void APlayerCharacter::PickUp(APickup* Pickup)
 void APlayerCharacter::PickUpKey(ADoorKey * Key)
 {
 	KeyFlags |= (int32)Key->GetKeyType();
-	
+	OnPickupKeyDelegate.Broadcast(Key);
+
 	//FString FlagsBinary = ConvertDecimalToBinary(KeyFlags);
 	//UE_LOG(LogTemp, Warning, TEXT("%s"), *FlagsBinary);
 }

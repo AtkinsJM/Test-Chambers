@@ -7,6 +7,8 @@
 #include "KeyType.h"
 #include "PlayerCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPickupKeyDelegate, class ADoorKey*, Key);
+
 UCLASS()
 class TESTCHAMBERS_API APlayerCharacter : public APawn
 {
@@ -36,6 +38,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
 	class USoundCue* RollCue;
 
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
+	FPickupKeyDelegate OnPickupKeyDelegate;
 
 protected:
 	// Called when the game starts or when spawned
@@ -67,10 +71,7 @@ public:
 	void PickUp(class APickup* Pickup);
 
 	void PickUpKey(class ADoorKey* Key);
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void AddKeyToInventory(ADoorKey* Key);
-
+	
 	FString ConvertDecimalToBinary(int32 Decimal);
 
 	class AInteractable* IsInteractablePresent();
