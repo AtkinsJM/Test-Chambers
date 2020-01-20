@@ -20,8 +20,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UStaticMeshComponent* Mesh;
-
-
+	
 	bool bIsActivatable;
 
 protected:

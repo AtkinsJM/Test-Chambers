@@ -20,7 +20,6 @@ void ADoor::Interact(AActor * OtherActor)
 	{
 		if (PlayerCharacter->HasKey(RequiredKeyType))
 		{
-			//PlayerCharacter->SetInteractable(nullptr);
 			Unlock();
 		}
 		else

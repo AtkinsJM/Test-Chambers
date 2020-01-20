@@ -230,11 +230,9 @@ void APlayerCharacter::CheckOccupiedSpace()
 	FHitResult HitResult;
 	if (GetWorld()->LineTraceSingleByProfile(OUT HitResult, GetActorLocation(), GetActorLocation() + FVector(0, 0, -2 * Width), "OverlapOnlyPawn"))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Landed on: %s"), *HitResult.Actor->GetName());
 		AActivatable* Activatable = Cast<AActivatable>(HitResult.Actor);
 		if (Activatable && Activatable->IsActivatable())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Activatable here!"));
 			Activatable->Activate(this);
 		}
 	}	
