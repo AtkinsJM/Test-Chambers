@@ -49,15 +49,9 @@ void ATransitionPortal::Teleport()
 
 	bIsTeleporting = false;
 	// TODO: check level exists before attempting to open
-	// TODO: use fade screen and delay on opening level.
 	UTestChambersGameInstance* GameInstance = Cast<UTestChambersGameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Game instance! Yeah"));
 		GameInstance->StartLoadLevel(LevelToLoad);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No game instance found..."));
 	}
 }
